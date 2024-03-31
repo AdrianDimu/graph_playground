@@ -91,7 +91,7 @@ def complete_graph(num_nodes):
     """
     Return a Graph instance representing
     a complete graph in 'num_nodes' nodes.
-    All complete graphs are undirected.
+    Only undirected graphs.
     """
     _validate_num_nodes(num_nodes)
     nodes =  range(num_nodes)
@@ -102,9 +102,47 @@ def star_graph(num_nodes):
     """
     Return a Graph instance representing
     the star graph in 'num_nodes' nodes.
-    Can generate both directed and undirected graphs.
+    Only undirected graphs.
     """
     _validate_num_nodes(num_nodes)
     nodes =  range(num_nodes)
     edges = [(0, i) for i in range(1, num_nodes)]
     return Graph(nodes, edges, is_directed=False)
+
+def _degrees(graph):
+    """Return a dictionary of degrees for each node in the graph"""
+    adj_list = adjacency_dict(graph)
+    degrees = { 
+        node: len(neighbors) 
+        for node, neighbors in adj_list.items()
+    }
+    return degrees
+
+def degrees(graph):
+    """Return a dictionary of degrees for each node in an undirected graph"""
+    if graph.is_directed:
+        raise ValueError("Cannot call degrees() on a directed graph")
+    return _degrees(graph)
+
+def out_degrees(graph):
+    """Return a dictionary of out degrees for each node in a directed graph"""
+    if graph.is_directed:
+        return _degrees(graph)
+    raise ValueError("Cannot call out_degrees() on an undirected graph")
+
+def total_degrees(graph):
+    """Return a dictionary of total degrees for each node in a directed graph"""
+    if not graph.is_directed:
+        raise ValueError("Cannot call total_degrees() on an undirected graph")
+    
+    undirected_graph = Graph(graph.nodes, graph.edges, is_directed=False)
+    return degrees(undirected_graph)
+
+def in_degrees(graph):
+    """Return a dictionary of in degrees for each node in a directed graph"""
+    if not graph.is_directed:
+        raise ValueError("Cannot call total_degrees() on an undirected graph")
+    
+    reversed_edges = [(node2, node1) for node1, node2 in graph.edges]
+    reversed_graph = Graph(graph.nodes, reversed_edges, is_directed=True) 
+    return out_degrees(reversed_graph)
