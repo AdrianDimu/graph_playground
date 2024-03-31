@@ -110,7 +110,7 @@ def star_graph(num_nodes):
     return Graph(nodes, edges, is_directed=False)
 
 def _degrees(graph):
-    """Return a dictionary of degrees for each node in the graph"""
+    """Return a dictionary of degrees for each node in the graph."""
     adj_list = adjacency_dict(graph)
     degrees = { 
         node: len(neighbors) 
@@ -119,19 +119,19 @@ def _degrees(graph):
     return degrees
 
 def degrees(graph):
-    """Return a dictionary of degrees for each node in an undirected graph"""
+    """Return a dictionary of degrees for each node in an undirected graph."""
     if graph.is_directed:
         raise ValueError("Cannot call degrees() on a directed graph")
     return _degrees(graph)
 
 def out_degrees(graph):
-    """Return a dictionary of out degrees for each node in a directed graph"""
+    """Return a dictionary of out degrees for each node in a directed graph."""
     if graph.is_directed:
         return _degrees(graph)
     raise ValueError("Cannot call out_degrees() on an undirected graph")
 
 def total_degrees(graph):
-    """Return a dictionary of total degrees for each node in a directed graph"""
+    """Return a dictionary of total degrees for each node in a directed graph."""
     if not graph.is_directed:
         raise ValueError("Cannot call total_degrees() on an undirected graph")
     
@@ -139,10 +139,42 @@ def total_degrees(graph):
     return degrees(undirected_graph)
 
 def in_degrees(graph):
-    """Return a dictionary of in degrees for each node in a directed graph"""
+    """Return a dictionary of in degrees for each node in a directed graph."""
     if not graph.is_directed:
-        raise ValueError("Cannot call total_degrees() on an undirected graph")
+        raise ValueError("Cannot call total_degrees() on an undirected graph.")
     
     reversed_edges = [(node2, node1) for node1, node2 in graph.edges]
     reversed_graph = Graph(graph.nodes, reversed_edges, is_directed=True) 
     return out_degrees(reversed_graph)
+
+def min_degree(graph):
+    """Return minimum degree for an undirected graph."""
+    return min(degrees(graph).values())
+
+def min_out_degree(graph):
+    """Return minimum out degree for a directed graph."""
+    return min(out_degrees(graph).values())
+
+def min_in_degree(graph):
+    """Return minimum in degree for a directed graph."""
+    return min(in_degrees(graph).values())
+
+def min_total_degree(graph):
+    """Return minimum total degree for a directed graph."""
+    return min(total_degrees(graph).values())
+
+def max_degree(graph):
+    """Return maximum degree for an undirected graph."""
+    return max(degrees(graph).values())
+
+def max_out_degree(graph):
+    """Return maximum out degree for a directed graph."""
+    return max(out_degrees(graph).values())
+
+def max_in_degree(graph):
+    """Return maximum in degree for a directed graph."""
+    return max(in_degrees(graph).values())
+
+def max_total_degree(graph):
+    """Return maximum total degree for a directed graph."""
+    return max(total_degrees(graph).values())
